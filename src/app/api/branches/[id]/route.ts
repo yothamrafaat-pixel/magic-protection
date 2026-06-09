@@ -2,12 +2,13 @@ import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
   const body = await req.json();
 
   const branch = await prisma.branch.update({
-    where: { id: params.id },
+    where: { id },
     data: {
       name: body.name,
       location: body.location || null,
@@ -19,15 +20,17 @@ export async function PATCH(
 
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
+
   try {
     await prisma.branch.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return Response.json({ success: true });
-  } catch (error) {
+  } catch {
     return Response.json(
       { error: "Delete failed" },
       { status: 400 }
