@@ -27,6 +27,7 @@ export async function POST(req: Request) {
     const dateValue = body.date ? String(body.date) : "";
     const supplierId = body.supplierId ? String(body.supplierId).trim() : null;
     const supplierPrice = body.supplierPrice ? Number(body.supplierPrice) : null;
+    const note = body.note ? String(body.note).trim() : null;
 
     if (!branchId || !productId) {
       return Response.json({ error: "الفرع أو المنتج مفقود" }, { status: 400 });
@@ -65,6 +66,7 @@ export async function POST(req: Request) {
         branchId,
         productId,
         quantity,
+        note,
         createdAt: operationDate,
       },
     });

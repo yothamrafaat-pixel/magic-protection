@@ -21,7 +21,7 @@ export default function InventoryPage() {
   const [branches, setBranches] = useState<Branch[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [form, setForm] = useState({ branchId: "", productId: "", quantity: 1, date: getTodayDate(), supplierId: "", supplierPrice: "" });
+  const [form, setForm] = useState({ branchId: "", productId: "", quantity: 1, date: getTodayDate(), supplierId: "", supplierPrice: "", note: "" });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editQuantity, setEditQuantity] = useState<number>(1);
 
@@ -89,7 +89,7 @@ export default function InventoryPage() {
       return alert(data?.error || "فشل إضافة المخزون");
     }
 
-    setForm({ branchId: "", productId: "", quantity: 1, date: getTodayDate(), supplierId: "", supplierPrice: "" });
+    setForm({ branchId: "", productId: "", quantity: 1, date: getTodayDate(), supplierId: "", supplierPrice: "", note: "" });
     loadData();
   };
 
@@ -210,6 +210,15 @@ export default function InventoryPage() {
               placeholder="سعر المورد (اختياري)"
               value={form.supplierPrice}
               onChange={handleChange}
+            />
+
+            <textarea
+              className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-500"
+              name="note"
+              placeholder="ملاحظة المخزون (اختياري)"
+              value={form.note}
+              onChange={handleChange}
+              rows={3}
             />
 
             <button
