@@ -9,6 +9,7 @@ export async function PATCH(req: Request, context: { params: Promise<{ id: strin
     where: { id },
     data: {
       name: body.name,
+      note: body.note ?? null,
       costPrice: Number(body.costPrice),
       sellingPrice: body.sellingPrice ? Number(body.sellingPrice) : null,
     },

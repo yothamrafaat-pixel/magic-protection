@@ -7,18 +7,31 @@ type Product = {
   name: string;
   costPrice: number;
   sellingPrice: number | null;
+  note?: string | null;
+};
+
+type Supplier = {
+  id: string;
+  name: string;
 };
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [form, setForm] = useState({ name: "", costPrice: "", sellingPrice: "" });
+  const [form, setForm] = useState({ name: "", costPrice: "", sellingPrice: "", supplierId: "", supplierPrice: "", note: "" });
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
-  const [editProduct, setEditProduct] = useState({ name: "", costPrice: "", sellingPrice: "" });
+  const [editProduct, setEditProduct] = useState({ name: "", costPrice: "", sellingPrice: "", note: "" });
 
   const load = async () => {
     const res = await fetch("/api/products");
     const data = await res.json();
     setProducts(data);
+    try {
+      const sres = await fetch("/api/suppliers");
+      if (sres.ok) setSuppliers(await sres.json());
+    } catch (e) {
+      // ignore
+    }
   };
 
   useEffect(() => {
@@ -43,7 +56,7 @@ export default function ProductsPage() {
       return alert(data.error || "فشل إضافة المنتج");
     }
 
-    setForm({ name: "", costPrice: "", sellingPrice: "" });
+    setForm({ name: "", costPrice: "", sellingPrice: "", supplierId: "", supplierPrice: "", note: "" });
     load();
   };
 
@@ -53,6 +66,7 @@ export default function ProductsPage() {
       name: product.name,
       costPrice: String(product.costPrice),
       sellingPrice: String(product.sellingPrice ?? ""),
+      note: product.note ?? "",
     });
   };
 
@@ -122,6 +136,34 @@ export default function ProductsPage() {
               value={form.sellingPrice}
               onChange={handleChange}
             />
+            <select
+              className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-500"
+              name="supplierId"
+              value={form.supplierId}
+              onChange={handleChange}
+            >
+              <option value="">اختيار مورد (اختياري)</option>
+              {suppliers.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+            <input
+              className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-500"
+              name="supplierPrice"
+              type="number"
+              placeholder="سعر المورد (اختياري)"
+              value={form.supplierPrice}
+              onChange={handleChange}
+            />
+            <textarea
+              className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-500"
+              name="note"
+              placeholder="ملاحظة المنتج (اختياري)"
+              value={form.note}
+              onChange={handleChange}
+            />
             <button
               className="w-full rounded-2xl bg-cyan-500 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-cyan-400"
               onClick={addProduct}
@@ -160,6 +202,12 @@ export default function ProductsPage() {
                         value={editProduct.sellingPrice}
                         onChange={(e) => setEditProduct({ ...editProduct, sellingPrice: e.target.value })}
                         placeholder="سعر البيع"
+                      />
+                      <input
+                        className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-cyan-500"
+                        value={editProduct.note}
+                        onChange={(e) => setEditProduct({ ...editProduct, note: e.target.value })}
+                        placeholder="ملاحظة (اختياري)"
                       />
                       <div className="flex gap-3">
                         <button
