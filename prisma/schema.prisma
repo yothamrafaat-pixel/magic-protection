@@ -1,29 +1,36 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
 model Branch {
   id        String   @id @default(cuid())
   name      String
   location  String?
   createdAt DateTime @default(now())
 
-  sales     Sale[]
-  inventory Inventory[]
+  sales               Sale[]
+  inventory           Inventory[]
+  inventoryOperations InventoryOperation[]
+  expenses            Expense[]
 }
 
 model Product {
   id           String   @id @default(cuid())
   name         String
+  note         String?
   costPrice    Float
   sellingPrice Float?
   createdAt    DateTime @default(now())
 
-  sales        Sale[]
-  inventory    Inventory[]
+  sales               Sale[]
+  inventory           Inventory[]
+  inventoryOperations InventoryOperation[]
+  supplierItems       SupplierItem[]
 }
 
 model Customer {
@@ -35,7 +42,7 @@ model Customer {
   chassis   String?
   createdAt DateTime @default(now())
 
-  sales     Sale[]
+  sales Sale[]
 }
 
 model Expense {
@@ -44,9 +51,11 @@ model Expense {
   amount      Float
   description String?
   employeeId  String?
+  branchId    String?
   createdAt   DateTime @default(now())
 
-  employee    Employee? @relation(fields: [employeeId], references: [id])
+  employee Employee? @relation(fields: [employeeId], references: [id])
+  branch   Branch?   @relation(fields: [branchId], references: [id])
 }
 
 model Employee {
@@ -56,37 +65,72 @@ model Employee {
   salary    Float
   createdAt DateTime @default(now())
 
-  expenses  Expense[]
+  expenses Expense[]
+  sales    Sale[]
 }
 
 model Inventory {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
   branchId  String
   productId String
   quantity  Int
 
-  branch    Branch  @relation(fields: [branchId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  branch  Branch  @relation(fields: [branchId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 
   @@unique([branchId, productId])
 }
 
+model InventoryOperation {
+  id        String   @id @default(cuid())
+  branchId  String
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  branch  Branch  @relation(fields: [branchId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
 model Sale {
-  id         String   @id @default(cuid())
+  id String @id @default(cuid())
 
   branchId   String
   customerId String
   productId  String
+  employeeId String?
 
-  quantity   Int
-  salePrice  Float
-  totalSale  Float
-  profit     Float
+  quantity  Int
+  salePrice Float
+  totalSale Float
+  profit    Float
 
+  createdAt DateTime @default(now())
+
+  branch   Branch    @relation(fields: [branchId], references: [id])
+  customer Customer  @relation(fields: [customerId], references: [id])
+  product  Product   @relation(fields: [productId], references: [id])
+  employee Employee? @relation(fields: [employeeId], references: [id])
+}
+
+model Supplier {
+  id           String         @id @default(cuid())
+  name         String
+  contact      String?
+  createdAt    DateTime       @default(now())
+
+  supplierItems SupplierItem[]
+}
+
+model SupplierItem {
+  id         String   @id @default(cuid())
+  supplierId String
+  productId  String
+  price      Float?
+  note       String?
   createdAt  DateTime @default(now())
 
-  branch     Branch   @relation(fields: [branchId], references: [id])
-  customer   Customer @relation(fields: [customerId], references: [id])
-  product    Product  @relation(fields: [productId], references: [id])
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
 }

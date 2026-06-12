@@ -18,11 +18,34 @@ export async function POST(req: Request) {
     return Response.json({ error: "Name required" }, { status: 400 });
   }
 
+  // If supplierId is provided we will create a SupplierItem linked to the product
+  const supplierId = body.supplierId;
+  const supplierPrice = body.supplierPrice ? Number(body.supplierPrice) : null;
+  const productNote = body.note ?? null;
+
+  // Validate supplier existence when supplied
+  if (supplierId) {
+    const supplierExists = await prisma.supplier.findUnique({ where: { id: supplierId } });
+    if (!supplierExists) {
+      return Response.json({ error: "Supplier not found" }, { status: 400 });
+    }
+  }
+
   const product = await prisma.product.create({
     data: {
       name: body.name,
+      note: productNote,
       costPrice: Number(body.costPrice),
       sellingPrice: body.sellingPrice ? Number(body.sellingPrice) : null,
+      supplierItems: supplierId
+        ? {
+            create: {
+              supplier: { connect: { id: supplierId } },
+              price: supplierPrice,
+              note: body.supplierNote ?? null,
+            },
+          }
+        : undefined,
     },
   });
 
