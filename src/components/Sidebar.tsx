@@ -12,12 +12,14 @@ export default function Sidebar() {
 
       <nav className="space-y-3 text-slate-200">
         <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/">📊 Dashboard</Link>
+        <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/sales">💸 Sales</Link>
         <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/sales/new">💰 New Sale</Link>
         <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/products">📦 Products</Link>
         <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/branches">🏢 Branches</Link>
         <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/inventory">📉 Inventory</Link>
         <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/customers">👤 Customers</Link>
         <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/employees">👥 Employees</Link>
+        <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/suppliers">🏭 Suppliers</Link>
         <Link className="block rounded-xl px-4 py-3 hover:bg-slate-900 hover:text-white" href="/expenses">🧾 Expenses</Link>
 
         <div className="mt-6 rounded-3xl border border-slate-800 bg-slate-900 p-4 text-sm text-slate-400">
@@ -28,7 +30,9 @@ export default function Sidebar() {
           <Link className="block rounded-xl px-4 py-2 hover:bg-slate-800 hover:text-white" href="/reports/customers">👤 عملاء</Link>
           <Link className="block rounded-xl px-4 py-2 hover:bg-slate-800 hover:text-white" href="/reports/employees">👥 موظفين</Link>
           <Link className="block rounded-xl px-4 py-2 hover:bg-slate-800 hover:text-white" href="/reports/inventory">📉 مخزون</Link>
+          <Link className="block rounded-xl px-4 py-2 hover:bg-slate-800 hover:text-white" href="/reports/suppliers">🏭 موردين</Link>
           <Link className="block rounded-xl px-4 py-2 hover:bg-slate-800 hover:text-white" href="/reports/expenses">🧾 مصروفات</Link>
+          <Link className="block rounded-xl px-4 py-2 hover:bg-slate-800 hover:text-white" href="/reports/general">📋 التقرير العام</Link>
           <Link className="block rounded-xl px-4 py-2 hover:bg-slate-800 hover:text-white" href="/reports/sales-history">🗓️ تاريخ المبيعات</Link>
         </div>
       </nav>
