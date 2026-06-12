@@ -1,0 +1,3 @@
+{
+  "excludedDirs": ["edge-profile", "node_modules/.turbopack", ".next"]
+}

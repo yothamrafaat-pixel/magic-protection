@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /out/
+/edge-profile/
 
 # production
 /build
@@ -41,3 +42,6 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+.vercel
+.env*
